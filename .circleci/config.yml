@@ -1,0 +1,65 @@
+# Machine executor, set the machine key to true in .circleci/config.yml:
+version: 2.1
+orbs:
+  secrethub: secrethub/cli@1.0.0
+jobs:
+  build_test_and_publish_job:
+    machine:
+      image: 'ubuntu-1604:201903-01'    # recommended linux image - includes Ubuntu 16.04, docker 18.09.3, docker-compose 1.23.1
+      # resource_class: medium
+      # docker_layer_caching: true    # default - false # requires a Circle CI plan that includes [Docker layer caching feature]
+    environment:
+      DESIRED_DOCKER_TAG: 5.27.1
+    steps:
+      - checkout
+      - secrethub/install
+      - run:
+          name: "Run my app Unit tests"
+          command: |
+                    set -x
+                    echo "Run my app Unit tests here"
+      - run:
+          name: "Building my app"
+          command: |
+                    set -x
+                    echo "Do you app build here"
+      - run:
+          name: "Docker build"
+          command: |
+                    set -x
+                    echo "Do you docker build here"
+                    # Possibility : Your Docker build also builds your app,and runs the tests
+      - run: # print the name of the branch we're on
+          name: "Docker push"
+          command: |
+                    set -x
+                    echo "Do you docker push here"
+
+workflows:
+  version: 2.1
+  build_test_and_publish:
+    jobs:
+      #   approval requirements disables both branches and tags filters
+      # - build_test_and_publish_job_approval:
+          # type: approval
+      - build_test_and_publish_job:
+          # requires:
+            # - docker_build_and_push_approval
+          context: cicd-orchestrator
+          filters:
+            branches:
+              ignore:
+                - master
+                - develop
+                # ---
+                - /^feature\/.*/
+                - /^support\/.*/
+                - /^bugfix\/.*/
+                - /^hotfix\/.*/
+                - /^release\/.*/
+                # ---
+            tags:
+              only:
+                - /^[0-999].[0-999].[0-999]/
+                - /^[0-999].[0-999].[0-999]-alpha/
+                - /^[0-999].[0-999].[0-999]-beta/
