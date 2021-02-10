@@ -45,7 +45,12 @@ workflows:
       - build_test_and_publish_job:
           # requires:
             # - docker_build_and_push_approval
-          context: cicd-orchestrator
+          # In the [myapp_circleci_context] you create
+          # one Env. Variable : "SECRETHUB_CREDENTIAL"
+          # you set SECRETHUB_CREDENTIAL value to the
+          # secrethub service account credential value
+          # see https://secrethub.io/docs/guides/circleci/#create-service-account
+          context: myapp_circleci_context
           filters:
             branches:
               ignore:
