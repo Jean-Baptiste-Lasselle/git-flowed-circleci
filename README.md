@@ -4,7 +4,19 @@ This repo defines a typical Circle CI Pipeline definition compatible with the Gi
 
 In this repo, the git flow is used, with all default configuration :
 * this repo was git flow initialized with `git flow init --defaults`
-* And the basic work cycle is  :
+* And the basic work cycle is the Work cycle describe in the below section
+
+## Work Cycle
+
+* First, you git clone your repo, and initialize the git flow :
+
+```bash
+touch ./README.md
+git add ./README.md && git commit -m "initialize master branch" && git push -u origin master
+git flow init --defaults && git push -u origin --all
+```
+
+* Then, you are on the `develop` git branch, and you want to add features to your software (or content to your website, all in all, add / edit files to add something to what you version in your repo) :
 
 ```bash
 export FEATURE_ALIAS="pull_requests_management"
